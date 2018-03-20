@@ -4,8 +4,24 @@ const express = require('express');
 // Create an router instance (aka "mini-app")
 const router = express.Router();
 
+const Note = require('../models/note');
+
 /* ========== GET/READ ALL ITEM ========== */
 router.get('/notes', (req, res, next) => {
+
+  const searchTerm = 'lady gaga';
+  let filter = {};
+
+  if (searchTerm) {
+    const re = new RegExp(searchTerm, 'i');
+    filter.title = { $regex: re };
+  }
+
+  return Note.find(filter)
+    .sort('created')
+    .then(results => {
+      console.log(results);
+    });
 
   console.log('Get All Notes');
   res.json([
